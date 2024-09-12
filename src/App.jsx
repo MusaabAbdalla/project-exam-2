@@ -29,7 +29,7 @@ function Nava() {
         <div>
           <img className="w-35 h-16" src={logo} alt="Holidaze logo" />
         </div>
-        <div className="nav-links absolute left-0 top-[-100%] flex min-h-[60vh] w-full items-center bg-white px-5 md:static md:min-h-fit md:w-auto">
+        <div className="nav-links bg-primary-90 absolute left-0 top-[-100%] flex min-h-[60vh] w-full items-center px-5 md:static md:min-h-fit md:w-auto md:bg-white">
           <ul className="flex flex-col gap-8 md:flex-row md:items-center md:gap-[4vw]">
             <li>
               <a className="hover:text-gray-500" href="#">
@@ -54,18 +54,18 @@ function Nava() {
           </ul>
         </div>
         <div className="flex items-center gap-6">
-          <button className="rounded-full bg-[#a6c1ee] px-5 py-2 text-white hover:bg-[#87acec]">
+          <button className="bg-primary-90 rounded-full px-5 py-2 text-white hover:bg-[#87acec]">
             Sign in
           </button>
           <div
             onClick={onToggleMenu}
-            className="open-icon cursor-pointer text-3xl md:hidden"
+            className="open-icon text-secondary-100 cursor-pointer text-3xl md:hidden"
           >
             <FiMenu />
           </div>
           <div
             onClick={onToggleMenu}
-            className="close-icon hidden cursor-pointer text-3xl md:hidden"
+            className="close-icon text-secondary-100 hidden cursor-pointer text-3xl md:hidden"
           >
             <RiCloseLargeFill />
           </div>
