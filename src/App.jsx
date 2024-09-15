@@ -2,6 +2,7 @@ import { SiGit } from "react-icons/si";
 import logo from "./assets/logo-no-background.png";
 import { FiMenu } from "react-icons/fi";
 import { RiCloseLargeFill } from "react-icons/ri";
+import { Button } from "./components/ui/button";
 
 function Nav() {
   return (
@@ -90,6 +91,7 @@ function App() {
   return (
     <>
       <Nava />
+      <Button className="bg-primary-100 text-secondary-90">click me</Button>
     </>
   );
 }
