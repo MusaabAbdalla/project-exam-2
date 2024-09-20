@@ -4,12 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useApi from "@/hooks/useApi";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API = "https://v2.api.noroff.dev/holidaze/venues";
 
 function Home() {
   const { data, isLoading, isError } = useApi(API);
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+
+  function handleVenueClick(venueId) {
+    navigate(`venue/${venueId}`);
+  }
 
   if (isLoading) {
     return <div>Page is Loading</div>;
@@ -18,8 +24,11 @@ function Home() {
     return <div>There is an Error</div>;
   }
 
-  //   const venuesArray = venues?.data;
+  // this will filter all venues with search value
   const venuesArray = data;
+  const filteredVenues = venuesArray.filter((venue) =>
+    venue.name.toLowerCase().includes(search.toLowerCase()),
+  );
 
   console.log(venuesArray);
 
@@ -54,8 +63,8 @@ function Home() {
         </div>
       </div>
       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-        {venuesArray ? (
-          venuesArray.map((venue) => (
+        {filteredVenues ? (
+          filteredVenues.map((venue) => (
             <div
               key={venue.id}
               className="group relative rounded-md border bg-gray-50"
@@ -90,7 +99,10 @@ function Home() {
                 </div>
               </div>
               <div className="mt-8 flex justify-end p-2">
-                <Button className="bg-secondary-100 hover:bg-secondary-100 font-bold hover:opacity-75">
+                <Button
+                  onClick={() => handleVenueClick(venue.id)}
+                  className="bg-secondary-100 hover:bg-secondary-100 font-bold hover:opacity-75"
+                >
                   Check Availability
                 </Button>
               </div>

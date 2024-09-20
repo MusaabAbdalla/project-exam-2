@@ -12,22 +12,34 @@ function Header() {
         <div className="nav-links bg-primary-90 absolute left-0 top-[-100%] flex min-h-[60vh] w-full items-center px-5 md:static md:min-h-fit md:w-auto md:bg-white">
           <ul className="flex flex-col gap-8 md:flex-row md:items-center md:gap-[4vw]">
             <li>
-              <a className="hover:text-gray-500" href="#">
+              <a
+                className="text-lg font-bold uppercase hover:text-gray-500"
+                href="#"
+              >
                 Home
               </a>
             </li>
             <li>
-              <a className="hover:text-gray-500" href="#">
+              <a
+                className="text-lg font-bold uppercase hover:text-gray-500"
+                href="#"
+              >
                 Contact us
               </a>
             </li>
             <li>
-              <a className="hover:text-gray-500" href="#">
+              <a
+                className="text-lg font-bold uppercase hover:text-gray-500"
+                href="#"
+              >
                 About us
               </a>
             </li>
             <li>
-              <a className="hover:text-gray-500" href="#">
+              <a
+                className="text-lg font-bold uppercase hover:text-gray-500"
+                href="#"
+              >
                 Profile
               </a>
             </li>
