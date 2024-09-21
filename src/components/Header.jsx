@@ -9,7 +9,7 @@ function Header() {
         <div>
           <img className="w-35 h-16" src={logo} alt="Holidaze logo" />
         </div>
-        <div className="nav-links bg-primary-90 absolute left-0 top-[-100%] flex min-h-[60vh] w-full items-center px-5 md:static md:min-h-fit md:w-auto md:bg-white">
+        <div className="nav-links bg-primary-100 absolute left-0 top-[-100%] flex min-h-[60vh] w-full items-center px-5 md:static md:min-h-fit md:w-auto md:bg-white">
           <ul className="flex flex-col gap-8 md:flex-row md:items-center md:gap-[4vw]">
             <li>
               <a
@@ -74,7 +74,7 @@ function onToggleMenu() {
   close.classList.toggle("hidden");
   open.classList.toggle("hidden");
   navLinks.classList.toggle("top-[-100%]");
-  navLinks.classList.toggle("top-[18%]");
+  navLinks.classList.toggle("top-[12%]");
   console.log(navLinks);
 }
 

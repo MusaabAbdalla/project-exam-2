@@ -4,8 +4,7 @@ import { LuDog, LuWifi, LuCar } from "react-icons/lu";
 import { IoLocationOutline } from "react-icons/io5";
 import { BsPersonArmsUp } from "react-icons/bs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-// import * as React from "react";
-
+import { DateRangePicker } from "@/components/DateRangePicker";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,52 +24,50 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { addDays, format } from "date-fns";
-import { DateRange } from "react-day-picker";
-
-import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-
 function Venue() {
   return (
-    <div className="mx-auto my-32 max-w-screen-2xl border">
-      <div className="mx-auto h-full w-full object-contain object-center">
-        <img src={ven} alt="" />
+    <div className="mx-auto my-32 max-w-screen-lg border">
+      <div className="mx-auto h-full w-full">
+        <img className="w-full object-center" src={ven} alt="" />
       </div>
-      <div className="flex items-end justify-between">
-        <div className="left">
-          <div className="mt-4 flex gap-4">
-            <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
-              <p>
-                <LiaUtensilsSolid />
-              </p>
-              <p>Breakfast</p>
-            </div>
-            <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
-              <p>
-                <LuDog />
-              </p>
-              <p>Pets</p>
-            </div>
-            <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
-              <p>
-                <LuWifi />
-              </p>
-              <p>Wifi</p>
-            </div>
-            <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
-              <p>
-                <LuCar />
-              </p>
-              <p>Parking</p>
-            </div>
+
+      <div className="mx-8 flex items-center justify-between">
+        <div className="mt-4 flex gap-4">
+          <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
+            <p>
+              <LiaUtensilsSolid />
+            </p>
+            <p>Breakfast</p>
           </div>
+          <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
+            <p>
+              <LuDog />
+            </p>
+            <p>Pets</p>
+          </div>
+          <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
+            <p>
+              <LuWifi />
+            </p>
+            <p>Wifi</p>
+          </div>
+          <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
+            <p>
+              <LuCar />
+            </p>
+            <p>Parking</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <p className="text-xs">very good</p>
+          <p className="bg-primary-90 rounded-t-lg rounded-br-lg p-2 text-xs text-white transition-shadow hover:rounded-lg">
+            5
+          </p>
+        </div>
+      </div>
+      <div className="mx-8 mt-8 flex flex-wrap items-center justify-center gap-8 md:justify-between md:gap-0">
+        <div className="left w-full md:max-w-[350px]">
           <div className="">
             <p className="text-primary-100 text-3xl font-bold">
               Beach Apartment
@@ -115,41 +112,45 @@ function Venue() {
           </div>
         </div>
         <div className="right">
-          <p className="text-2xl">Availabilty</p>
-          <Card className="w-[350px]">
+          <Card className="w-[350px] bg-gray-50">
             <CardHeader>
-              <CardTitle>Create project</CardTitle>
-              <CardDescription>
-                Deploy your new project in one-click.
-              </CardDescription>
+              <CardTitle className="text-center text-2xl font-bold">
+                Availability
+              </CardTitle>
+              <CardDescription></CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="mb-6">
               <form>
                 <div className="grid w-full items-center gap-4">
                   <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Name of your project" />
+                    <DateRangePicker />
                   </div>
                   <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="framework">Framework</Label>
+                    <Label htmlFor="framework">Number of Guests</Label>
                     <Select>
-                      <SelectTrigger id="framework">
+                      <SelectTrigger id="guests" className="bg-white">
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent position="popper">
-                        <SelectItem value="next">Next.js</SelectItem>
-                        <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                        <SelectItem value="astro">Astro</SelectItem>
-                        <SelectItem value="nuxt">Nuxt.js</SelectItem>
+                        <SelectItem value="1">1</SelectItem>
+                        <SelectItem value="2">2</SelectItem>
+                        <SelectItem value="3">3</SelectItem>
+                        <SelectItem value="4">4</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
               </form>
             </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline">Cancel</Button>
-              <Button>Deploy</Button>
+            <CardFooter className="grid w-full items-center gap-8">
+              <div>
+                <div className="flex items-center justify-center gap-20 text-xl font-bold">
+                  <p>Total</p>
+                  <p> $850</p>
+                </div>
+                <div className="rounded bg-gray-700 py-[0.5px]"></div>
+              </div>
+              <Button className="bg-secondary-100 text-xl">Book Now</Button>
             </CardFooter>
           </Card>
         </div>
