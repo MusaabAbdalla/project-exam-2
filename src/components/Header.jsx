@@ -1,8 +1,10 @@
 import logo from "../assets/logo-no-background.png";
 import { FiMenu } from "react-icons/fi";
 import { RiCloseLargeFill } from "react-icons/ri";
+import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
   return (
     <header className="bg-white">
       <nav className="mx-auto flex w-[92%] items-center justify-between pt-3">
@@ -12,41 +14,44 @@ function Header() {
         <div className="nav-links bg-primary-100 absolute left-0 top-[-100%] flex min-h-[60vh] w-full items-center px-5 md:static md:min-h-fit md:w-auto md:bg-white">
           <ul className="flex flex-col gap-8 md:flex-row md:items-center md:gap-[4vw]">
             <li>
-              <a
+              <Link
                 className="text-lg font-bold uppercase hover:text-gray-500"
-                href="#"
+                to="/"
               >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 className="text-lg font-bold uppercase hover:text-gray-500"
-                href="#"
+                to="/contact"
               >
                 Contact us
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 className="text-lg font-bold uppercase hover:text-gray-500"
-                href="#"
+                to="/about"
               >
                 About us
-              </a>
+              </Link>
             </li>
             <li>
-              <a
+              <Link
                 className="text-lg font-bold uppercase hover:text-gray-500"
-                href="#"
+                to="/profile"
               >
                 Profile
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
         <div className="flex items-center gap-6">
-          <button className="bg-primary-90 rounded-full px-5 py-2 text-white hover:bg-[#87acec]">
+          <button
+            onClick={() => navigate("/login")}
+            className="bg-primary-90 rounded-full px-5 py-2 text-white hover:bg-[#87acec]"
+          >
             Sign in
           </button>
           <div
