@@ -6,6 +6,8 @@ import { BsPersonArmsUp } from "react-icons/bs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DateRangePicker } from "@/components/DateRangePicker";
 import { Button } from "@/components/ui/button";
+import useVenueApi from "@/hooks/useVenueApi";
+const API = "https://v2.api.noroff.dev/holidaze/venues";
 import {
   Card,
   CardContent,
@@ -24,78 +26,96 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-function Venue() {
+function Venue({ id }) {
+  const { data, isLoading, isError } = useVenueApi(`${API}/${id}`);
+  if (isLoading || !data) {
+    return <div>Product is Loading</div>;
+  }
+  if (isError) {
+    return <div>There is a Problem</div>;
+  }
+
   return (
     <div className="mx-auto my-32 max-w-screen-lg border">
       <div className="mx-auto h-full w-full">
-        <img className="w-full object-center" src={ven} alt="" />
+        <img
+          className="w-full object-center"
+          src={data.media[0].url}
+          alt={data.media[0].alt}
+        />
       </div>
 
       <div className="mx-8 flex items-center justify-between">
         <div className="mt-4 flex gap-4">
-          <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
-            <p>
-              <LiaUtensilsSolid />
-            </p>
-            <p>Breakfast</p>
-          </div>
-          <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
-            <p>
-              <LuDog />
-            </p>
-            <p>Pets</p>
-          </div>
-          <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
-            <p>
-              <LuWifi />
-            </p>
-            <p>Wifi</p>
-          </div>
-          <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
-            <p>
-              <LuCar />
-            </p>
-            <p>Parking</p>
-          </div>
+          {data.meta.breakfast && (
+            <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
+              <p>
+                <LiaUtensilsSolid />
+              </p>
+              <p>Breakfast</p>
+            </div>
+          )}
+
+          {data.meta.parking && (
+            <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
+              <p>
+                <LuDog />
+              </p>
+              <p>Pets</p>
+            </div>
+          )}
+          {data.meta.pets && (
+            <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
+              <p>
+                <LuWifi />
+              </p>
+              <p>Wifi</p>
+            </div>
+          )}
+          {data.meta.wifi && (
+            <div className="bg-secondary-70 flex items-center rounded-md p-1 text-sm">
+              <p>
+                <LuCar />
+              </p>
+              <p>Parking</p>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center gap-1">
           <p className="text-xs">very good</p>
           <p className="bg-primary-90 rounded-t-lg rounded-br-lg p-2 text-xs text-white transition-shadow hover:rounded-lg">
-            5
+            {data.rating}
           </p>
         </div>
       </div>
       <div className="mx-8 mt-8 flex flex-wrap items-center justify-center gap-8 md:justify-between md:gap-0">
         <div className="left w-full md:max-w-[350px]">
           <div className="">
-            <p className="text-primary-100 text-3xl font-bold">
-              Beach Apartment
-            </p>
+            <p className="text-primary-100 text-3xl font-bold">{data.name}</p>
             <div className="flex items-center gap-1">
               <p>
                 <IoLocationOutline className="text-secondary-100 text-lg" />
               </p>
-              <p className="text-xs">Oslo,Norway</p>
+              <p className="text-xs">
+                {data.location.city},{data.location.country}
+              </p>
             </div>
           </div>
           <div className="text-md mt-4 flex items-center gap-1">
             <p>
               <BsPersonArmsUp />
             </p>
-            <p>10 guest</p>
+            <p>{data.maxGuests} guests</p>
           </div>
           <div>
-            <p className="mt-4 text-lg font-normal">$120, -per night</p>
+            <p className="mt-4 text-lg font-normal">
+              ${data.price}, -per night
+            </p>
           </div>
           <div className="max-w-96">
             <p className="mt-2 text-2xl font-semibold">Description</p>
-            <p className="line-clamp-4 text-sm">
-              A charming studio apartment within walking distance to all the
-              attractions in Oslo. Conveniently close to the city center, yet
-              nestled in the popular hillsides of Oslo, offering easy access to
-              nature.
-            </p>
+            <p className="line-clamp-4 text-sm">{data.description}</p>
           </div>
           <div className="mt-8">
             <p>Owner</p>

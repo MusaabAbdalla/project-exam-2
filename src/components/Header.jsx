@@ -9,7 +9,9 @@ function Header() {
     <header className="bg-white">
       <nav className="mx-auto flex w-[92%] items-center justify-between pt-3">
         <div>
-          <img className="w-35 h-16" src={logo} alt="Holidaze logo" />
+          <Link>
+            <img className="w-35 h-16" src={logo} alt="Holidaze logo" />
+          </Link>
         </div>
         <div className="nav-links bg-primary-100 absolute left-0 top-[-100%] flex min-h-[60vh] w-full items-center px-5 md:static md:min-h-fit md:w-auto md:bg-white">
           <ul className="flex flex-col gap-8 md:flex-row md:items-center md:gap-[4vw]">

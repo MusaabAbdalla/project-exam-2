@@ -14,7 +14,7 @@ function Home() {
   const navigate = useNavigate();
 
   function handleVenueClick(venueId) {
-    navigate(`venue/${venueId}`);
+    navigate(`venues/${venueId}`);
   }
 
   if (isLoading) {

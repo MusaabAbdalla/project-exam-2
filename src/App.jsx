@@ -1,5 +1,5 @@
 import Layout from "./components/Layout";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useParams } from "react-router-dom";
 import Home from "./routes/Home";
 import About from "./routes/about";
 import Contact from "./routes/contact";
@@ -8,13 +8,19 @@ import SignUp from "./routes/signup";
 import Profile from "./routes/profile";
 import Venue from "./routes/venue";
 
+function VenueWrapper() {
+  const params = useParams();
+  const { id } = params;
+  return <Venue id={id} />;
+}
+
 function App() {
   return (
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="venue/:id" element={<Venue />} />
+          <Route path="venues/:id" element={<VenueWrapper />} />
           <Route path="contact" element={<Contact />} />
           <Route path="About" element={<About />} />
           <Route path="profile" element={<Profile />} />
