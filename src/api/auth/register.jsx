@@ -17,7 +17,20 @@ export async function userRegister(userName, userEmail, userPassword) {
 
     const response = await fetch(API_BASE + AUTH_REGISTER, option);
     const json = await response.json();
-    console.log(json);
+    let result, message;
+    if (response.status === 201) {
+      result = true;
+      message = "";
+      return { result, message };
+    } else {
+      result = false;
+      message = json.errors[0].message;
+      return { result, message };
+    }
+    // console.log(response);
+    // console.log(response.status);
+    // console.log(typeof response.status);
+    // console.log(json.errors[0].message);
   } catch (error) {
     console.log(error);
   }

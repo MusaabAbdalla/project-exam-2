@@ -10,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link, useNavigate } from "react-router-dom";
-import { userRegister } from "@/api/auth/register";
 import { userLogin } from "@/api/auth/login";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -18,16 +17,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 const schema = yup
   .object({
-    email: yup
-      .string()
-      .email("email should be valid email")
-      .required("email is required"),
+    email: yup.string().email("Must be valid").required("email is required"),
     password: yup.string().min(8, "Password must be at least 8 characters"),
   })
   .required();
-
-export const description =
-  "A login form with email and password. There's an option to login with Google and a link to sign up if you don't have an account.";
 
 export default function LoginForm() {
   const navigate = useNavigate();
