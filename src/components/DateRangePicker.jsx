@@ -1,9 +1,7 @@
 import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { addDays, format } from "date-fns";
-// Remove the DateRange import
 import { Calendar } from "@/components/ui/calendar";
-
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,13 +10,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export const DateRangePicker = () => {
-  // Define date state without importing DateRange
-  const [date, setDate] = React.useState({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  });
-
+// Add date and onDateChange as props
+export const DateRangePicker = ({ date, onDateChange }) => {
   return (
     <div className={cn("grid gap-2")}>
       <Popover>
@@ -52,7 +45,7 @@ export const DateRangePicker = () => {
             mode="range"
             defaultMonth={date?.from}
             selected={date}
-            onSelect={setDate}
+            onSelect={onDateChange} // Call onDateChange when the date changes
             numberOfMonths={2}
           />
         </PopoverContent>

@@ -60,7 +60,7 @@ export default function SingUpForm() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Card className="mx-auto max-w-sm">
+        <Card className="mx-auto max-w-sm shadow-lg shadow-primary-100/70">
           <CardHeader>
             <CardTitle className="text-xl">Sign Up</CardTitle>
             <CardDescription>
@@ -93,7 +93,10 @@ export default function SingUpForm() {
                 />
                 <p className="text-red-600">{errors.password?.message}</p>
               </div>
-              <Button type="submit" className="w-full">
+              <Button
+                type="submit"
+                className="w-full bg-primary-100 shadow-primary-60 hover:bg-primary-90"
+              >
                 Create an account
               </Button>
               <p className="mt-4 text-center text-red-600">{signupError}</p>
