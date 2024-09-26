@@ -30,6 +30,7 @@ export async function createBooking(dateFrom, dateTo, guests, venueId) {
       result = true;
       message = "";
       let booking = json.data;
+
       return { result, booking, message };
     } else {
       result = false;

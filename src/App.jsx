@@ -7,6 +7,7 @@ import Login from "./routes/Login";
 import SignUp from "./routes/signup";
 import Profile from "./routes/profile";
 import Venue from "./routes/venue";
+import CreateNewVenue from "./routes/createNewVenue";
 
 function VenueWrapper() {
   const params = useParams();
@@ -26,6 +27,7 @@ function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<SignUp />} />
+          <Route path="createvenue" element={<CreateNewVenue />} />
         </Route>
       </Routes>
     </>
