@@ -22,114 +22,115 @@ import {
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { createVenue } from "@/api/auth/createVenue";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { RocketIcon } from "@radix-ui/react-icons";
+import { useNavigate } from "react-router-dom";
+//form validation schema setup
+const schema = yup
+  .object({
+    name: yup.string().required("Venue name is required"),
+    description: yup.string().required("Description is required"),
+    mediaUrl: yup.string().required("A valid image url is required"),
+    mediaAlt: yup.string().required("Media Alt is required"),
+    price: yup
+      .number()
+      .typeError("A valid number is required")
+      .positive("Price must be positive")
+      .integer("Price must be integer")
+      .required("This field is required"),
+    maxGuests: yup
+      .number()
+      .typeError("A valid number is required")
+      .positive("Guests max number  must be positive")
+      .integer("Guests max number  must be integer")
+      .required("This field is required"),
+    rating: yup
+      .number()
+      .typeError("A valid number is required")
+      .min(0, "Rating cannot be less than 0")
+      .max(5, "Rating cannot be greater than 5")
+      .required("This field is required"),
+    wifi: yup.boolean(),
+    parking: yup.boolean(),
+    breakfast: yup.boolean(),
+    pets: yup.boolean(),
+    city: yup.string(),
+    country: yup.string(),
+  })
+  .required();
 
 export default function CreateNewVenue() {
-  const [venueData, setVenueData] = useState({
-    name: "",
-    description: "",
-    media: [{ url: "", alt: "" }],
-    price: 0,
-    maxGuests: 0,
-    rating: 0,
-    meta: {
-      wifi: false,
-      parking: false,
-      breakfast: false,
-      pets: false,
-    },
-    location: {
-      city: "",
-      country: "",
-    },
-  });
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  //initialize  react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(schema) });
 
-  const [alert, setAlert] = useState({ type: null, message: "" });
+  //form submission handler
+  async function onSubmit(formData) {
+    console.log(formData);
+    const { result, data, message } = await createVenue(formData);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setVenueData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleMetaChange = (name) => {
-    setVenueData((prevData) => ({
-      ...prevData,
-      meta: {
-        ...prevData.meta,
-        [name]: !prevData.meta[name],
-      },
-    }));
-  };
-
-  const handleLocationChange = (e) => {
-    const { name, value } = e.target;
-    setVenueData((prevData) => ({
-      ...prevData,
-      location: {
-        ...prevData.location,
-        [name]: value,
-      },
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Here you would typically send the venueData to your API
-      // For demonstration, we'll simulate an API call with a timeout
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setAlert({ type: "success", message: "Venue created successfully!" });
-    } catch (error) {
-      setAlert({
-        type: "error",
-        message: "Error creating venue. Please try again.",
-      });
+    if (result) {
+      console.log(result, data, message);
+      setSuccess(
+        <div>
+          <Alert>
+            <RocketIcon className="h-4 w-4" />
+            <AlertTitle className="text-green-600">Venue Created</AlertTitle>
+            <AlertDescription></AlertDescription>
+          </Alert>
+        </div>,
+      );
+      setTimeout(() => {
+        setSuccess("");
+        navigate("/");
+      }, 3000);
+    } else {
+      console.log(result, data, message);
+      setError(
+        <div>
+          <Alert variant="destructive" className="mx-auto mt-4 w-[350px]">
+            <ExclamationTriangleIcon className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{message}</AlertDescription>
+          </Alert>
+        </div>,
+      );
+      setTimeout(() => {
+        setError("");
+      }, 2000);
     }
-  };
-
-  const handleCancel = () => {
-    // Here you would typically handle the cancellation, e.g., navigate back
-    console.log("Venue creation cancelled");
-  };
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <Card>
-        <CardHeader>
-          <CardTitle>Create New Venue</CardTitle>
-          <CardDescription>
-            Fill in the details to create a new venue.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {alert.type && (
-            <Alert
-              variant={alert.type === "error" ? "destructive" : "default"}
-              className="mb-6"
-            >
-              {alert.type === "error" ? (
-                <AlertCircle className="h-4 w-4" />
-              ) : (
-                <CheckCircle2 className="h-4 w-4" />
-              )}
-              <AlertTitle>
-                {alert.type === "error" ? "Error" : "Success"}
-              </AlertTitle>
-              <AlertDescription>{alert.message}</AlertDescription>
-            </Alert>
-          )}
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+          <CardHeader>
+            <CardTitle>Create New Venue</CardTitle>
+            <CardDescription>
+              Fill in the details to create a new venue.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div>
+              {success}
+              {error}
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="name">Venue Name</Label>
-              <Input
-                id="name"
-                name="name"
-                value={venueData.name}
-                onChange={handleInputChange}
-                required
-              />
+              <Input id="name" name="name" {...register("name")} />
+              <p className="text-red-600">{errors.name?.message}</p>
             </div>
 
             <div className="space-y-2">
@@ -137,52 +138,27 @@ export default function CreateNewVenue() {
               <Textarea
                 id="description"
                 name="description"
-                value={venueData.description}
-                onChange={handleInputChange}
-                required
+                {...register("description")}
               />
+              <p className="text-red-600">{errors.description?.message}</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="media-url">Media URL</Label>
-              <Input
-                id="media-url"
-                name="media-url"
-                value={venueData.media[0].url}
-                onChange={(e) =>
-                  setVenueData((prevData) => ({
-                    ...prevData,
-                    media: [{ ...prevData.media[0], url: e.target.value }],
-                  }))
-                }
-              />
+              <Label htmlFor="mediaUrl">Media URL</Label>
+              <Input id="mediaUrl" name="mediaUrl" {...register("mediaUrl")} />
+              <p className="text-red-600">{errors.mediaUrl?.message}</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="media-alt">Media Alt Text</Label>
-              <Input
-                id="media-alt"
-                name="media-alt"
-                value={venueData.media[0].alt}
-                onChange={(e) =>
-                  setVenueData((prevData) => ({
-                    ...prevData,
-                    media: [{ ...prevData.media[0], alt: e.target.value }],
-                  }))
-                }
-              />
+              <Label htmlFor="mediaAlt">Media Alt Text</Label>
+              <Input id="mediaAlt" name="mediaAlt" {...register("mediaAlt")} />
+              <p className="text-red-600">{errors.mediaAlt?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="price">Price</Label>
-              <Input
-                id="price"
-                name="price"
-                type="number"
-                value={venueData.price}
-                onChange={handleInputChange}
-                required
-              />
+              <Input id="price" name="price" {...register("price")} />
+              <p className="text-red-600">{errors.price?.message}</p>
             </div>
 
             <div className="space-y-2">
@@ -190,65 +166,59 @@ export default function CreateNewVenue() {
               <Input
                 id="maxGuests"
                 name="maxGuests"
-                type="number"
-                value={venueData.maxGuests}
-                onChange={handleInputChange}
-                required
+                {...register("maxGuests")}
               />
+              <p className="text-red-600">{errors.maxGuests?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="rating">Rating</Label>
-              <Input
-                id="rating"
-                name="rating"
-                type="number"
-                min="0"
-                max="5"
-                step="0.1"
-                value={venueData.rating}
-                onChange={handleInputChange}
-              />
+              <Input id="rating" name="rating" {...register("rating")} />
+              <p className="text-red-600">{errors.rating?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label>Amenities</Label>
               <div className="flex space-x-4">
                 <div className="flex items-center space-x-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id="wifi"
-                    checked={venueData.meta.wifi}
-                    onCheckedChange={() => handleMetaChange("wifi")}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    {...register("wifi")}
                   />
                   <Label htmlFor="wifi">
                     <Wifi className="mr-1 inline h-4 w-4" /> WiFi
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id="parking"
-                    checked={venueData.meta.parking}
-                    onCheckedChange={() => handleMetaChange("parking")}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    {...register("parking")}
                   />
                   <Label htmlFor="parking">
                     <Car className="mr-1 inline h-4 w-4" /> Parking
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id="breakfast"
-                    checked={venueData.meta.breakfast}
-                    onCheckedChange={() => handleMetaChange("breakfast")}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    {...register("breakfast")}
                   />
                   <Label htmlFor="breakfast">
                     <Coffee className="mr-1 inline h-4 w-4" /> Breakfast
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Checkbox
+                  <input
+                    type="checkbox"
                     id="pets"
-                    checked={venueData.meta.pets}
-                    onCheckedChange={() => handleMetaChange("pets")}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    {...register("pets")}
                   />
                   <Label htmlFor="pets">
                     <PawPrint className="mr-1 inline h-4 w-4" /> Pets Allowed
@@ -264,25 +234,25 @@ export default function CreateNewVenue() {
                 <Input
                   placeholder="City"
                   name="city"
-                  value={venueData.location.city}
-                  onChange={handleLocationChange}
+                  id="city"
+                  {...register("city")}
                 />
                 <Input
                   placeholder="Country"
                   name="country"
-                  value={venueData.location.country}
-                  onChange={handleLocationChange}
+                  id="country"
+                  {...register("country")}
                 />
               </div>
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={handleCancel}>
-            Cancel
-          </Button>
-          <Button onClick={handleSubmit}>Create Venue</Button>
-        </CardFooter>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button onClick={() => navigate("/profile")} variant="outline">
+              Cancel
+            </Button>
+            <Button type="submit">Create Venue</Button>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );

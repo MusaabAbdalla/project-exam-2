@@ -1,4 +1,3 @@
-import ven from "@/assets/venue.jpg";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -214,8 +213,8 @@ export default function ProfilePage() {
                   <div className="flex flex-col sm:flex-row">
                     <div className="sm:w-1/3">
                       <img
-                        src={ven}
-                        alt={venue.name}
+                        src={venue.media[0].url}
+                        alt={venue.media[0].alt}
                         className="h-full w-full object-cover"
                       />
                     </div>
@@ -235,7 +234,7 @@ export default function ProfilePage() {
                           </CardTitle>
                           <CardDescription className="flex items-center gap-2">
                             <MapPin className="h-4 w-4" />
-                            <span>{venue.location}</span>
+                            <span>{venue.location.city}</span>
                           </CardDescription>
                         </div>
                         <p className="text-muted-foreground mb-4">
