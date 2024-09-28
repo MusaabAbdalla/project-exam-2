@@ -1,7 +1,12 @@
 const API_BASE = "https://v2.api.noroff.dev/";
 const AUTH_REGISTER = "auth/register";
 
-export async function userRegister(userName, userEmail, userPassword) {
+export async function userRegister(
+  userName,
+  userEmail,
+  userPassword,
+  venueManager,
+) {
   try {
     const option = {
       method: "POST",
@@ -12,9 +17,10 @@ export async function userRegister(userName, userEmail, userPassword) {
         name: userName,
         email: userEmail,
         password: userPassword,
+        venueManager: venueManager,
       }),
     };
-
+    //this is the best way to fetch the status of the request
     const response = await fetch(API_BASE + AUTH_REGISTER, option);
     const json = await response.json();
     let result, message;

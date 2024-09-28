@@ -34,19 +34,22 @@ function Home() {
 
   return (
     <div className="mx-auto mt-2 max-w-screen-2xl px-16">
-      <div className="from-primary-100 via-primary-90 to-secondary-100 flex max-w-full items-center justify-between bg-gradient-to-r">
-        <div className="px-8">
-          <p className="mb-6 line-clamp-3 text-5xl text-white">
-            Find your perfect holiday <br /> accommodation with Holidaze
+      <div className="flex max-w-full flex-col-reverse items-center justify-between bg-gradient-to-r from-primary-100 via-primary-90 to-secondary-100 px-4 py-1 md:flex-row md:px-8">
+        <div className="mb-8 md:mb-0 md:w-1/2">
+          <h1 className="mb-6 text-4xl font-bold leading-tight text-white md:text-5xl">
+            Find your perfect holiday accommodation with Holidaze
+          </h1>
+          <p className="mb-8 text-lg text-white md:text-xl">
+            Discover a wide range of holiday venues for your next getaway. Book
+            now and create unforgettable memories.
           </p>
-          <p className="text-md line-clamp-4 text-white">
-            Discover a wide rage of holiday <br /> venues for your next getaway.{" "}
-            <br />
-            Book now and create unforgettable memories
-          </p>
-          <form className="" role="search" onSubmit={(e) => e.preventDefault()}>
-            <input
-              className="form-control border-secondary-90 mt-6 w-full rounded-md border py-2"
+          <form
+            className="relative"
+            role="search"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <Input
+              className="w-full bg-white py-3 pl-4 pr-12 text-lg"
               type="search"
               placeholder="  Search for venues"
               value={search}
@@ -54,9 +57,9 @@ function Home() {
             />
           </form>
         </div>
-        <div className="w-1/2 p-8">
+        <div className="p-4 md:w-1/2 md:p-8">
           <img
-            className="object-cover object-center"
+            className="h-[400px] w-full rounded-lg object-cover object-center shadow-xl"
             src={hero}
             alt="hero image"
           />
@@ -86,14 +89,14 @@ function Home() {
               </div>
               <div className="mt-2 flex items-start justify-between px-4">
                 <div className="flex flex-col items-start">
-                  <p className="text-primary-90 text-xl">{venue.name}</p>
+                  <p className="text-xl text-primary-90">{venue.name}</p>
                   <p className="text-lg">
                     US$ {venue.price} <span>per night</span>
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
                   <p className="text-sm">very good</p>
-                  <p className="bg-primary-90 rounded-t-lg rounded-br-lg p-2 text-xs text-white transition-shadow hover:rounded-lg">
+                  <p className="rounded-t-lg rounded-br-lg bg-primary-90 p-2 text-xs text-white transition-shadow hover:rounded-lg">
                     {venue.rating}
                   </p>
                 </div>
@@ -101,7 +104,7 @@ function Home() {
               <div className="mt-8 flex justify-end p-2">
                 <Button
                   onClick={() => handleVenueClick(venue.id)}
-                  className="bg-secondary-100 hover:bg-secondary-100 font-bold hover:opacity-75"
+                  className="bg-secondary-100 font-bold hover:bg-secondary-100 hover:opacity-75"
                 >
                   Check Availability
                 </Button>

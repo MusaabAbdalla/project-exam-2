@@ -3,14 +3,27 @@ import { FiMenu } from "react-icons/fi";
 import { RiCloseLargeFill } from "react-icons/ri";
 import { Link, useNavigate } from "react-router-dom";
 import { load } from "@/storage/load";
-
+import { clear } from "@/storage/clear";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-const token = load("token");
-const profile = load("profile");
-console.log(profile);
 
 function Header() {
   const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const profile = load("profile");
+
+  // Check the token status when the component mounts
+  useEffect(() => {
+    const token = load("token");
+    setIsLoggedIn(!!token); // Set logged-in state based on token presence
+  }, []);
+
+  const handleLogout = () => {
+    clear(); // Clear storage
+    setIsLoggedIn(false); // Update logged-in state
+    navigate("/login"); // Redirect to login page after logging out
+  };
+
   return (
     <header className="bg-white">
       <nav className="mx-auto flex w-[92%] items-center justify-between pt-3">
@@ -45,25 +58,24 @@ function Header() {
                 About us
               </Link>
             </li>
-            {/* <li>
-              <Link
-                className="text-lg font-bold uppercase hover:text-gray-500"
-                to="/profile"
-              >
-                Profile
-              </Link>
-            </li> */}
           </ul>
         </div>
         <div className="flex items-center gap-6">
-          {/* if user is logged in this will show avatar image else will show sign-in button */}
-          {token ? (
-            <Link to="/profile">
-              <Avatar className="h-14 w-14">
-                <AvatarImage src={profile.avatar.url}></AvatarImage>
-                <AvatarFallback>{profile.name.slice(0, 2)}</AvatarFallback>
-              </Avatar>
-            </Link>
+          {isLoggedIn ? (
+            <>
+              <Link to="/profile">
+                <Avatar className="h-14 w-14">
+                  <AvatarImage src={profile?.avatar?.url} alt="User Avatar" />
+                  <AvatarFallback>{profile?.name?.slice(0, 2)}</AvatarFallback>
+                </Avatar>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="rounded-full bg-red-500 px-5 py-2 text-white hover:bg-red-600"
+              >
+                Log out
+              </button>
+            </>
           ) : (
             <button
               onClick={() => navigate("/login")}
@@ -99,7 +111,6 @@ function onToggleMenu() {
   open.classList.toggle("hidden");
   navLinks.classList.toggle("top-[-100%]");
   navLinks.classList.toggle("top-[12%]");
-  console.log(navLinks);
 }
 
 export default Header;

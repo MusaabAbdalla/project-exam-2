@@ -1,3 +1,3 @@
-export function clearStorage() {
+export function clear() {
   localStorage.clear();
 }

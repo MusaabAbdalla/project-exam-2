@@ -10,40 +10,50 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { userRegister } from "@/api/auth/register";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { userRegister } from "@/api/auth/register";
 
 const schema = yup
   .object({
     name: yup.string().required("Name is required"),
     email: yup
       .string()
-      .email("Must be valid email")
+      .email("Must be a valid email")
       .required("Email is required"),
     password: yup.string().min(8, "Password must be at least 8 characters"),
+    venueManager: yup.boolean(),
   })
   .required();
 
-export default function SingUpForm() {
+export default function SignUpForm() {
   const navigate = useNavigate();
-  const [signupSuccess, setSingupSuccess] = useState("");
+  const [signupSuccess, setSignupSuccess] = useState("");
   const [signupError, setSignupError] = useState("");
 
+  // Initialize react-hook-form
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
+  // Form submission handler
   async function onSubmit(data) {
-    const { name, email, password } = data;
+    console.log(data); // Check if data includes the checkbox value
+    const { name, email, password, venueManager } = data;
 
-    const { result, message } = await userRegister(name, email, password);
+    //
+    const { result, message } = await userRegister(
+      name,
+      email,
+      password,
+      venueManager,
+    );
 
     if (result) {
-      setSingupSuccess(
+      setSignupSuccess(
         "Registration successful! You are being redirected to the login page.",
       );
       setTimeout(() => {
@@ -58,7 +68,7 @@ export default function SingUpForm() {
   }
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card className="mx-auto max-w-sm shadow-lg shadow-primary-100/70">
           <CardHeader>
@@ -70,8 +80,12 @@ export default function SingUpForm() {
           <CardContent>
             <div className="grid gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="name">name</Label>
-                <Input id="name" placeholder="" {...register("name")} />
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  placeholder="Your name"
+                  {...register("name")}
+                />
                 <p className="text-red-600">{errors.name?.message}</p>
               </div>
               <div className="grid gap-2">
@@ -89,10 +103,27 @@ export default function SingUpForm() {
                 <Input
                   id="password"
                   type="password"
+                  placeholder="Your password"
                   {...register("password")}
                 />
                 <p className="text-red-600">{errors.password?.message}</p>
               </div>
+
+              {/* Venue Manager Checkbox (Native HTML Checkbox) */}
+              {/* I had problem working with shadcn Checkbox component
+              data is not returned at all */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="venueManager"
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  {...register("venueManager")}
+                />
+                <Label htmlFor="venueManager" className="text-sm font-medium">
+                  Venue Manager
+                </Label>
+              </div>
+
               <Button
                 type="submit"
                 className="w-full bg-primary-100 shadow-primary-60 hover:bg-primary-90"

@@ -30,81 +30,13 @@ import useGetVenuesByProfile from "@/hooks/getVenuesByProfile";
 import { format, differenceInDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
-// Mock data for demonstration
-const mockBookings = [
-  {
-    id: 1,
-    venueName: "Cozy Cabin",
-    date: "2023-07-15",
-    status: "Upcoming",
-    guests: 4,
-    nights: 3,
-    checkIn: "2023-07-15",
-    checkOut: "2023-07-18",
-    owner: "Alice Smith",
-    location: "Aspen, Colorado",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 2,
-    venueName: "Beach House",
-    date: "2023-06-20",
-    status: "Completed",
-    guests: 6,
-    nights: 7,
-    checkIn: "2023-06-20",
-    checkOut: "2023-06-27",
-    owner: "Bob Johnson",
-    location: "Malibu, California",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 3,
-    venueName: "Mountain Retreat",
-    date: "2023-08-05",
-    status: "Upcoming",
-    guests: 2,
-    nights: 2,
-    checkIn: "2023-08-05",
-    checkOut: "2023-08-07",
-    owner: "Carol Williams",
-    location: "Banff, Alberta",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-];
-
-const mockVenues = [
-  {
-    id: 1,
-    name: "City Loft",
-    location: "New York",
-    rating: 4.8,
-    description: "Modern loft in the heart of the city with stunning views.",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 2,
-    name: "Lakeside Cottage",
-    location: "Michigan",
-    rating: 4.6,
-    description:
-      "Charming cottage by the lake, perfect for a peaceful getaway.",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-  {
-    id: 3,
-    name: "Desert Oasis",
-    location: "Arizona",
-    rating: 4.9,
-    description: "Luxurious retreat in the desert with a private pool and spa.",
-    image: "/placeholder.svg?height=200&width=200",
-  },
-];
-
 export default function ProfilePage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("bookings");
   const profile = load("profile");
+  if (!profile) {
+    return <div>You Are not logged in</div>;
+  }
   const { bookingsData, isLoading, isError } = useGetBookingsByProfile();
   const { venuesData, isVenuesLoading, isVenuesError } =
     useGetVenuesByProfile();
