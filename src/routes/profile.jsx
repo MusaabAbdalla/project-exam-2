@@ -29,13 +29,43 @@ import useGetBookingsByProfile from "@/hooks/getBookingsByProfile";
 import useGetVenuesByProfile from "@/hooks/getVenuesByProfile";
 import { format, differenceInDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import { LogIn } from "lucide-react";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("bookings");
   const profile = load("profile");
   if (!profile) {
-    return <div>You Are not logged in</div>;
+    function handleLogin() {
+      navigate("/login");
+    }
+    return (
+      <div className="container mx-auto flex min-h-screen items-center justify-center bg-gray-100 px-4 py-16">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-center text-2xl font-bold">
+              <LogOut className="mr-2 h-6 w-6" />
+              You've Been Logged Out
+            </CardTitle>
+            <CardDescription className="text-center">
+              Your session has ended. Thank you for using Holidaze!
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-center">
+              For your security, we've logged you out of your account. You can
+              log back in anytime to continue browsing and booking amazing
+              venues.
+            </p>
+          </CardContent>
+          <CardFooter className="flex justify-center">
+            <Button onClick={handleLogin} className="w-full">
+              <LogIn className="mr-2 h-4 w-4" /> Log In Again
+            </Button>
+          </CardFooter>
+        </Card>
+      </div>
+    );
   }
   const { bookingsData, isLoading, isError } = useGetBookingsByProfile();
   const { venuesData, isVenuesLoading, isVenuesError } =

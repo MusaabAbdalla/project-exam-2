@@ -14,6 +14,7 @@ import { userLogin } from "@/api/auth/login";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "@/context/AuthContext";
 
 const schema = yup
   .object({
@@ -23,6 +24,7 @@ const schema = yup
   .required();
 
 export default function LoginForm() {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [loginError, setLoginError] = useState("");
   const {
@@ -37,6 +39,7 @@ export default function LoginForm() {
       const result = await userLogin(email, password);
       if (result) {
         console.log("everything is fine");
+        login();
         navigate("/profile");
       } else {
         setLoginError("Invalid Username of Password");

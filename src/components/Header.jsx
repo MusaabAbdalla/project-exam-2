@@ -6,23 +6,24 @@ import { load } from "@/storage/load";
 import { clear } from "@/storage/clear";
 import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/context/AuthContext";
 
 function Header() {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
   const profile = load("profile");
 
   // Check the token status when the component mounts
-  useEffect(() => {
-    const token = load("token");
-    setIsLoggedIn(!!token); // Set logged-in state based on token presence
-  }, []);
+  // useEffect(() => {
+  //   const token = load("token");
+  //   setIsLoggedIn(!!token); // Set logged-in state based on token presence
+  // }, []);
 
-  const handleLogout = () => {
-    clear(); // Clear storage
-    setIsLoggedIn(false); // Update logged-in state
-    navigate("/login"); // Redirect to login page after logging out
-  };
+  // const handleLogout = () => {
+  //   clear(); // Clear storage
+  //   setIsLoggedIn(false); // Update logged-in state
+  //   navigate("/login"); // Redirect to login page after logging out
+  // };
 
   return (
     <header className="bg-white">
@@ -70,7 +71,11 @@ function Header() {
                 </Avatar>
               </Link>
               <button
-                onClick={handleLogout}
+                onClick={() => {
+                  logout();
+                  clear();
+                  navigate("/login");
+                }}
                 className="rounded-full bg-red-500 px-5 py-2 text-white hover:bg-red-600"
               >
                 Log out

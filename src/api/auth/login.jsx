@@ -30,6 +30,7 @@ export async function userLogin(userEmail, userPassword) {
     if (accessToken) {
       save("token", accessToken);
       save("profile", profile);
+
       return true;
     }
     console.error("Login failed, no access token");
