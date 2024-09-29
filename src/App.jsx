@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import Layout from "./components/Layout";
+import { Routes, Route, useParams } from "react-router-dom";
+import Home from "./routes/Home";
+import About from "./routes/about";
+import Contact from "./routes/contact";
+import Login from "./routes/Login";
+import SignUp from "./routes/signup";
+import Profile from "./routes/profile";
+import Venue from "./routes/venue";
+import CreateNewVenue from "./routes/createNewVenue";
+import EditProfile from "./routes/editProfile";
+import EditVenue from "./routes/editVenue";
+import { AuthProvider } from "./context/AuthContext";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+function VenueWrapper() {
+  const params = useParams();
+  const { id } = params;
+  return <Venue id={id} />;
 }
 
-export default App
+function EditVenueWrapper() {
+  const params = useParams();
+  const { id } = params;
+  return <EditVenue id={id} />;
+}
+
+function App() {
+  return (
+    <>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="venues/:id" element={<VenueWrapper />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="About" element={<About />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="createvenue" element={<CreateNewVenue />} />
+            <Route path="editvenue/:id" element={<EditVenueWrapper />} />
+            <Route path="profile/editprofile" element={<EditProfile />} />
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </>
+  );
+}
+
+export default App;
