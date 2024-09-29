@@ -84,12 +84,12 @@ export default function ProfilePage() {
     return <div>There is an Error</div>;
   }
 
-  async function handleDeleteVenue(id) {
-    const { result, message } = await deleteVenue(id);
-    if (result) {
-      navigate("/profile");
-    }
-  }
+  // async function handleDeleteVenue(id) {
+  //   const { result, message } = await deleteVenue(id);
+  //   if (result) {
+  //     navigate("/profile");
+  //   }
+  // }
 
   return (
     // <div className="flex min-h-screen flex-col items-center justify-center">
@@ -263,7 +263,6 @@ export default function ProfilePage() {
                         variant="outline"
                         size="icon"
                         className="bg-red-100 text-red-600"
-                        onClick={() => handleDeleteVenue(venue.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                         <span className="sr-only">Delete</span>
