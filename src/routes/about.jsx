@@ -16,7 +16,10 @@ import {
   Calendar,
   Star,
 } from "lucide-react";
-
+import pic1 from "../assets/pic1.jpg";
+import pic2 from "@/assets/pic2.jpg";
+import pic3 from "@/assets/pic3.jpg";
+import venue from "@/assets/venue.jpg";
 export default function AboutUs() {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -98,7 +101,7 @@ export default function AboutUs() {
           </div>
           <div className="relative h-64 md:h-auto md:w-1/2">
             <img
-              src="/placeholder.svg?height=400&width=600"
+              src={pic1}
               alt="Unique accommodation"
               className="h-full w-full object-cover"
             />
@@ -124,7 +127,7 @@ export default function AboutUs() {
           </div>
           <div className="relative h-64 md:h-auto md:w-1/2">
             <img
-              src="/placeholder.svg?height=400&width=600"
+              src={pic2}
               alt="Host welcoming guests"
               className="h-full w-full object-cover"
             />
@@ -152,7 +155,7 @@ export default function AboutUs() {
               <span>123 Holiday Street, San Francisco, CA 94105</span>
             </div>
           </div>
-          <Button className="mt-6">
+          <Button className="mt-6 bg-primary-100 text-white">
             <Mail className="mr-2 h-4 w-4" /> Contact Us
           </Button>
         </CardContent>

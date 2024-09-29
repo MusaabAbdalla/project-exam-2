@@ -128,7 +128,10 @@ export default function ContactUs() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full bg-primary-100 text-white"
+                >
                   Send Message
                   <Send className="ml-2 h-4 w-4" />
                 </Button>
