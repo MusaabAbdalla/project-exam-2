@@ -29,11 +29,15 @@ import useGetVenuesByProfile from "@/hooks/getVenuesByProfile";
 import { format, differenceInDays } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { clear } from "@/storage/clear";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("bookings");
   const profile = load("profile");
+
+  const { logout } = useAuth();
   if (!profile) {
     function handleLogin() {
       navigate("/login");
@@ -91,18 +95,33 @@ export default function ProfilePage() {
             <h1 className="text-3xl font-bold">{profile.name}</h1>
             <p className="text-muted-foreground mb-4">{profile.email}</p>
             <div className="flex gap-4">
-              <Button variant="outline">
+              <Button
+                onClick={() => navigate("/profile/editprofile")}
+                variant="outline"
+                className="bg-primary-100 text-white"
+              >
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Profile
               </Button>
-              <Button variant="outline">
+              <Button
+                onClick={() => {
+                  logout();
+                  clear();
+                  navigate("/login");
+                }}
+                variant="outline"
+                className="bg-red-600 text-white"
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
               </Button>
             </div>
           </div>
         </div>
-        <Button onClick={() => navigate("/createvenue")}>
+        <Button
+          className="bg-primary-100 text-white"
+          onClick={() => navigate("/createvenue")}
+        >
           <PlusCircle className="mr-2 h-4 w-4" />
           Create New Venue
         </Button>
@@ -111,7 +130,7 @@ export default function ProfilePage() {
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
-        className="flex min-h-dvh w-full flex-col items-center justify-center"
+        className="flex min-h-dvh w-full flex-col items-center justify-start"
       >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="bookings">My Bookings</TabsTrigger>
@@ -194,7 +213,10 @@ export default function ProfilePage() {
                       </div>
                     </div>
                     <div className="mt-4 border-t pt-4">
-                      <Button variant="outline" className="w-full">
+                      <Button
+                        variant="outline"
+                        className="w-full bg-primary-100 text-white"
+                      >
                         <Edit className="mr-2 h-4 w-4" />
                         Edit Booking
                       </Button>
@@ -222,7 +244,8 @@ export default function ProfilePage() {
                       <Button
                         variant="outline"
                         size="icon"
-                        className="absolute right-4 top-4"
+                        className="absolute right-4 top-4 text-secondary-100"
+                        onClick={() => navigate(`/editvenue/${venue.id}`)}
                       >
                         <Edit className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
@@ -246,7 +269,10 @@ export default function ProfilePage() {
                         </div>
                       </div>
                       <div className="mt-4 border-t pt-4">
-                        <Button variant="outline" className="w-full">
+                        <Button
+                          variant="outline"
+                          className="w-full bg-primary-100 text-white"
+                        >
                           View Bookings
                         </Button>
                       </div>

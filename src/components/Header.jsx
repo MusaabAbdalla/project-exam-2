@@ -10,7 +10,7 @@ import { useAuth } from "@/context/AuthContext";
 
 function Header() {
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, loading } = useAuth();
   const profile = load("profile");
 
   // Check the token status when the component mounts
@@ -24,6 +24,9 @@ function Header() {
   //   setIsLoggedIn(false); // Update logged-in state
   //   navigate("/login"); // Redirect to login page after logging out
   // };
+  if (loading) {
+    return null;
+  }
 
   return (
     <header className="bg-white">
@@ -76,7 +79,7 @@ function Header() {
                   clear();
                   navigate("/login");
                 }}
-                className="rounded-full bg-red-500 px-5 py-2 text-white hover:bg-red-600"
+                className="hidden rounded-full bg-red-500 px-5 py-2 text-white hover:bg-red-600"
               >
                 Log out
               </button>
