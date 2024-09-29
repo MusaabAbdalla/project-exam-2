@@ -22,6 +22,7 @@ import {
   Edit,
   PlusCircle,
   LogOut,
+  Trash2,
 } from "lucide-react";
 import { load } from "@/storage/load";
 import useGetBookingsByProfile from "@/hooks/getBookingsByProfile";
@@ -31,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { clear } from "@/storage/clear";
+import { deleteVenue } from "@/api/auth/deleteVenue";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -80,6 +82,10 @@ export default function ProfilePage() {
   }
   if (isError) {
     return <div>There is an Error</div>;
+  }
+
+  async function handleDeleteVenue(id) {
+    const { reslut, message } = await deleteVenue(id);
   }
 
   return (
@@ -250,7 +256,17 @@ export default function ProfilePage() {
                         <Edit className="h-4 w-4" />
                         <span className="sr-only">Edit</span>
                       </Button>
-                      <div className="flex-grow">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        className="bg-red-100 text-red-600"
+                        onClick={() => handleDeleteVenue(venue.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        <span className="sr-only">Delete</span>
+                      </Button>
+
+                      <div className="mt-2 flex-grow">
                         <div className="mb-4">
                           <CardTitle className="mb-1 text-xl">
                             {venue.name}

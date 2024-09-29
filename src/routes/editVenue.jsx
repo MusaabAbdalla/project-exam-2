@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-const API = "https://v2.api.noroff.dev/holidaze/venues";
 import {
   Card,
   CardContent,
@@ -14,15 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import {
-  Wifi,
-  Car,
-  Coffee,
-  PawPrint,
-  MapPin,
-  AlertCircle,
-  CheckCircle2,
-} from "lucide-react";
+import { Wifi, Car, Coffee, PawPrint, MapPin } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -31,28 +22,28 @@ import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
 import { RocketIcon } from "@radix-ui/react-icons";
 import { useNavigate } from "react-router-dom";
 import useVenueApi from "@/hooks/useVenueApi";
-//form validation schema setup
+import { load } from "@/storage/load";
+import { editVenue } from "@/api/auth/editVenue";
+
+// Form validation schema setup
 const schema = yup
   .object({
     name: yup.string().required("Venue name is required"),
     description: yup.string().required("Description is required"),
-    mediaUrl: yup.string().required("A valid image url is required"),
-    mediaAlt: yup.string().required("Media Alt is required"),
+    mediaUrl: yup.string().required("A valid image URL is required"),
+    mediaAlt: yup.string().required("Media Alt text is required"),
     price: yup
       .number()
-      .typeError("A valid number is required")
       .positive("Price must be positive")
-      .integer("Price must be integer")
+      .integer("Price must be an integer")
       .required("This field is required"),
     maxGuests: yup
       .number()
-      .typeError("A valid number is required")
-      .positive("Guests max number  must be positive")
-      .integer("Guests max number  must be integer")
+      .positive("Guests max number must be positive")
+      .integer("Guests max number must be an integer")
       .required("This field is required"),
     rating: yup
       .number()
-      .typeError("A valid number is required")
       .min(0, "Rating cannot be less than 0")
       .max(5, "Rating cannot be greater than 5")
       .required("This field is required"),
@@ -69,38 +60,63 @@ export default function EditVenue({ id }) {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  //initialize  react-hook-form
+
+  // Initialize react-hook-form with validation and default values
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema) });
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {}, // Default values will be updated after data is fetched
+  });
 
-  const { data, isLoading, isError } = useVenueApi(`${API}/${id}`);
-  console.log(data);
+  const { data, isLoading, isError } = useVenueApi(
+    `https://v2.api.noroff.dev/holidaze/venues/${id}`,
+  );
 
-  //form submission handler
+  // Update form fields with fetched venue data when data is loaded
+  useEffect(() => {
+    if (data) {
+      reset({
+        name: data.name || "",
+        description: data.description || "",
+        mediaUrl: data.media[0].url || "", // Assuming media array, adjust if necessary
+        mediaAlt: data.media[0].alt || "", // Assuming mediaAlt exists, adjust if necessary
+        price: data.price || "",
+        maxGuests: data.maxGuests || "",
+        rating: data.rating || 0,
+        wifi: data.meta?.wifi || false,
+        parking: data.meta?.parking || false,
+        breakfast: data.meta?.breakfast || false,
+        pets: data.meta?.pets || false,
+        city: data.location?.city || "",
+        country: data.location?.country || "",
+      });
+    }
+  }, [data, reset]);
+
+  // Form submission handler
   async function onSubmit(formData) {
     console.log(formData);
-    const { result, data, message } = await createVenue(formData);
+    const { result, data, message } = await editVenue(formData, id);
 
     if (result) {
-      console.log(result, data, message);
       setSuccess(
         <div>
           <Alert>
             <RocketIcon className="h-4 w-4" />
-            <AlertTitle className="text-green-600">Venue Created</AlertTitle>
+            <AlertTitle className="text-green-600">Venue Updated</AlertTitle>
             <AlertDescription></AlertDescription>
           </Alert>
         </div>,
       );
       setTimeout(() => {
         setSuccess("");
-        navigate("/");
+        navigate("/profile");
       }, 3000);
     } else {
-      console.log(result, data, message);
       setError(
         <div>
           <Alert variant="destructive" className="mx-auto mt-4 w-[350px]">
@@ -121,10 +137,8 @@ export default function EditVenue({ id }) {
       <Card>
         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
           <CardHeader>
-            <CardTitle>Create New Venue</CardTitle>
-            <CardDescription>
-              Fill in the details to create a new venue.
-            </CardDescription>
+            <CardTitle>Edit Venue</CardTitle>
+            <CardDescription>Edit the details of the venue.</CardDescription>
           </CardHeader>
           <CardContent>
             <div>
@@ -134,51 +148,43 @@ export default function EditVenue({ id }) {
 
             <div className="space-y-2">
               <Label htmlFor="name">Venue Name</Label>
-              <Input id="name" name="name" {...register("name")} />
+              <Input id="name" {...register("name")} />
               <p className="text-red-600">{errors.name?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                name="description"
-                {...register("description")}
-              />
+              <Textarea id="description" {...register("description")} />
               <p className="text-red-600">{errors.description?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="mediaUrl">Media URL</Label>
-              <Input id="mediaUrl" name="mediaUrl" {...register("mediaUrl")} />
+              <Input id="mediaUrl" {...register("mediaUrl")} />
               <p className="text-red-600">{errors.mediaUrl?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="mediaAlt">Media Alt Text</Label>
-              <Input id="mediaAlt" name="mediaAlt" {...register("mediaAlt")} />
+              <Input id="mediaAlt" {...register("mediaAlt")} />
               <p className="text-red-600">{errors.mediaAlt?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="price">Price</Label>
-              <Input id="price" name="price" {...register("price")} />
+              <Input id="price" {...register("price")} />
               <p className="text-red-600">{errors.price?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="maxGuests">Max Guests</Label>
-              <Input
-                id="maxGuests"
-                name="maxGuests"
-                {...register("maxGuests")}
-              />
+              <Input id="maxGuests" {...register("maxGuests")} />
               <p className="text-red-600">{errors.maxGuests?.message}</p>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="rating">Rating</Label>
-              <Input id="rating" name="rating" {...register("rating")} />
+              <Input id="rating" {...register("rating")} />
               <p className="text-red-600">{errors.rating?.message}</p>
             </div>
 
@@ -186,45 +192,25 @@ export default function EditVenue({ id }) {
               <Label>Amenities</Label>
               <div className="flex space-x-4">
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="wifi"
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    {...register("wifi")}
-                  />
+                  <Checkbox id="wifi" {...register("wifi")} />
                   <Label htmlFor="wifi">
                     <Wifi className="mr-1 inline h-4 w-4" /> WiFi
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="parking"
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    {...register("parking")}
-                  />
+                  <Checkbox id="parking" {...register("parking")} />
                   <Label htmlFor="parking">
                     <Car className="mr-1 inline h-4 w-4" /> Parking
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="breakfast"
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    {...register("breakfast")}
-                  />
+                  <Checkbox id="breakfast" {...register("breakfast")} />
                   <Label htmlFor="breakfast">
                     <Coffee className="mr-1 inline h-4 w-4" /> Breakfast
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="pets"
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    {...register("pets")}
-                  />
+                  <Checkbox id="pets" {...register("pets")} />
                   <Label htmlFor="pets">
                     <PawPrint className="mr-1 inline h-4 w-4" /> Pets Allowed
                   </Label>
@@ -236,18 +222,8 @@ export default function EditVenue({ id }) {
               <Label>Location</Label>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4" />
-                <Input
-                  placeholder="City"
-                  name="city"
-                  id="city"
-                  {...register("city")}
-                />
-                <Input
-                  placeholder="Country"
-                  name="country"
-                  id="country"
-                  {...register("country")}
-                />
+                <Input placeholder="City" {...register("city")} />
+                <Input placeholder="Country" {...register("country")} />
               </div>
             </div>
           </CardContent>
@@ -255,7 +231,7 @@ export default function EditVenue({ id }) {
             <Button onClick={() => navigate("/profile")} variant="outline">
               Cancel
             </Button>
-            <Button type="submit">Create Venue</Button>
+            <Button type="submit">Update Venue</Button>
           </CardFooter>
         </form>
       </Card>
