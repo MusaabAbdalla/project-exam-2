@@ -85,7 +85,10 @@ export default function ProfilePage() {
   }
 
   async function handleDeleteVenue(id) {
-    const { reslut, message } = await deleteVenue(id);
+    const { result, message } = await deleteVenue(id);
+    if (result) {
+      navigate("/profile");
+    }
   }
 
   return (
